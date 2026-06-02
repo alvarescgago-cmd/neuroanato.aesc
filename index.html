@@ -41,11 +41,16 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 /* KEY: html+body fill viewport, no overflow */
+/* position:fixed on body is required for iOS Safari —
+   overflow:hidden alone is ignored by iOS touch scroll */
 html {
   height: 100%;
   overflow: hidden;
 }
 body {
+  position: fixed;       /* stops iOS from scrolling the document */
+  top: 0; left: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   font-family: var(--fi);
@@ -132,6 +137,8 @@ body {
   min-height: 0;        /* allow shrinking below content */
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
+  overscroll-behavior-y: contain;    /* prevent scroll propagation */
   padding: .4rem 0;
 }
 
@@ -192,6 +199,8 @@ body {
   min-height: 0;         /* crucial — flex child must be told it can shrink */
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
+  overscroll-behavior-y: contain;    /* prevent scroll propagation */
   padding: 2rem 2.5rem 3rem;
   display: flex;
   flex-direction: column;
@@ -333,15 +342,20 @@ body {
     transition: transform .24s cubic-bezier(.4,0,.2,1);
     width: min(var(--sw), 85vw);
     height: 100vh;
+    overflow: hidden;
   }
   .sidebar.open { transform: translateX(0); }
   .overlay.on { display: block; }
 
   /* main fills remaining space */
-  .main { height: 100%; }
+  .main { height: 100%; overflow: hidden; }
 
   /* home adjustments */
-  .home { padding: 1.25rem 1rem 3rem; -webkit-overflow-scrolling: touch; }
+  .home {
+    padding: 1.25rem 1rem 3rem;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
 
   .hgrid { grid-template-columns: 1fr; }
   .tgrid { grid-template-columns: repeat(2,1fr); }
